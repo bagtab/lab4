@@ -1,0 +1,7 @@
+uppgift 1: DFS2
+uppgift 2: BFS2
+uppgift 3: Dijkstra2
+uppgift 4: MinComponent
+uppgift 5: ConfirmEdge
+uppgift 6: CyclePaths
+uppgift 7: TopologicalSort

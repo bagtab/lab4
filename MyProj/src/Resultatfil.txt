@@ -1,0 +1,157 @@
+input:  java graphs/DFS2 AL NY < states.txt
+output: AL->FL->GA->NC->TN->AR->LA->TX->NM->AZ->CA->NV->ID->MT->ND->MN->IA->IL->IN->KY->OH->PA->DE->NJ->NY
+uppgift 1: input i form av startnod, slutnod och nodkopplingar
+gör dfs från startnod till slutnod via txtfil med nodkopplingar
+
+
+uppgift 2:
+input: startnod slutnod txtfil
+output: shortest path from startnod to slutnod
+EX:
+java graphs/BFS2 AL NY < states.txt
+AL->TN->KY->OH->PA->NY
+gör bfs sökning från startnod till slutnod via txtfil med nodkopplingar
+
+uppgift 3
+input: startnod slutnod txtfil
+output: distans och våg från startnod till slutnod
+java graphs/Dijkstra2 AL NY < states.txt
+distance from AL to NYis 310.0
+AL->TN->VA->DC->MD->DE->NJ->NY
+
+gör dijkstras alghoritm för alla noder, ger sedan vägen och "längden" från startnod till slutnod
+
+uppgift 4
+input: textfil
+output: varje kant i minkomponenten och dess vikt(bägge riktningar dyker upp)
+EX:
+java graphs/MinComponent < states.txt
+all edges:
+AL<->FL    weight:1.0
+AL<->GA    weight:2.0
+AL<->MS    weight:3.0
+AL<->TN    weight:4.0
+FL<->AL    weight:1.0
+GA<->AL    weight:2.0
+GA<->NC    weight:32.0
+GA<->SC    weight:33.0
+MS<->AL    weight:3.0
+MS<->AR    weight:7.0
+TN<->AL    weight:4.0
+AR<->LA    weight:5.0
+AR<->MO    weight:6.0
+AR<->MS    weight:7.0
+AR<->OK    weight:8.0
+AR<->TX    weight:10.0
+LA<->AR    weight:5.0
+MO<->AR    weight:6.0
+MO<->IA    weight:37.0
+OK<->AR    weight:8.0
+OK<->CO    weight:20.0
+TX<->AR    weight:10.0
+AZ<->CA    weight:11.0
+AZ<->NM    weight:12.0
+AZ<->NV    weight:13.0
+AZ<->UT    weight:14.0
+CA<->AZ    weight:11.0
+CA<->OR    weight:16.0
+NM<->AZ    weight:12.0
+NM<->CO    weight:19.0
+NV<->AZ    weight:13.0
+NV<->ID    weight:42.0
+UT<->AZ    weight:14.0
+OR<->CA    weight:16.0
+CO<->KS    weight:17.0
+CO<->NE    weight:18.0
+CO<->NM    weight:19.0
+CO<->OK    weight:20.0
+CO<->WY    weight:22.0
+KS<->CO    weight:17.0
+NE<->CO    weight:18.0
+WY<->CO    weight:22.0
+CT<->MA    weight:23.0
+CT<->NY    weight:24.0
+CT<->RI    weight:25.0
+MA<->CT    weight:23.0
+MA<->NH    weight:64.0
+MA<->VT    weight:67.0
+NY<->CT    weight:24.0
+NY<->NJ    weight:91.0
+RI<->CT    weight:25.0
+DC<->MD    weight:26.0
+DC<->VA    weight:27.0
+MD<->DC    weight:26.0
+MD<->DE    weight:28.0
+VA<->DC    weight:27.0
+VA<->KY    weight:60.0
+DE<->MD    weight:28.0
+DE<->NJ    weight:29.0
+DE<->PA    weight:30.0
+NJ<->DE    weight:29.0
+NJ<->NY    weight:91.0
+PA<->DE    weight:30.0
+NC<->GA    weight:32.0
+SC<->GA    weight:33.0
+IA<->IL    weight:35.0
+IA<->MN    weight:36.0
+IA<->MO    weight:37.0
+IA<->SD    weight:39.0
+IA<->WI    weight:40.0
+IL<->IA    weight:35.0
+IL<->IN    weight:47.0
+IL<->KY    weight:48.0
+MN<->IA    weight:36.0
+MN<->ND    weight:74.0
+SD<->IA    weight:39.0
+WI<->IA    weight:40.0
+ID<->MT    weight:41.0
+ID<->NV    weight:42.0
+ID<->WA    weight:45.0
+MT<->ID    weight:41.0
+WA<->ID    weight:45.0
+IN<->IL    weight:47.0
+IN<->MI    weight:52.0
+IN<->OH    weight:53.0
+KY<->IL    weight:48.0
+KY<->VA    weight:60.0
+KY<->WV    weight:61.0
+MI<->IN    weight:52.0
+OH<->IN    weight:53.0
+WV<->KY    weight:61.0
+NH<->MA    weight:64.0
+NH<->ME    weight:71.0
+VT<->MA    weight:67.0
+ME<->NH    weight:71.0
+ND<->MN    weight:74.0
+
+Hittar först största komponenten och använder krustjals algoritm för att ta bort allaöverflödiga kanter
+
+uppgift 5
+input: startnod slutnod txtfil
+output: wheter there is a path or not
+EX:
+java graphs/ConfirmEdge AL WV < states.txt
+there is a path between AL and WV
+
+gör en dfs från startnod, kollar om slutnod finns med
+
+uppgift 6
+input: txtfil
+output: cycles in graph
+EX:
+java graphs/CyclePaths < states.txt
+AL FL GA NC AL
+AL GA NC AL
+
+varje nod gör en dfs-sökning med varje granne och sig själv, om den vägen finns läggs denna till bland hittade cycler
+jag har lagt till en kant mellan NC och AL
+
+
+uppgift 7
+input: txtfil
+output: topological sort of graph
+EX:
+java graphs/TopologicalSort < smallSample.txt
+TJ TL TM TK TI TH TG TD TC TA TF TE TB
+
+ör topologisk sortering med hjälp av dfs
