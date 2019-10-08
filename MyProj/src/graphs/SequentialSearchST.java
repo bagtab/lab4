@@ -63,7 +63,7 @@ public class SequentialSearchST<Key, Value> {
         private Key key;
         private Value val;
         private Node next;
-
+        // constructs the node 
         public Node(Key key, Value val, Node next)  {
             this.key  = key;
             this.val  = val;
@@ -75,6 +75,7 @@ public class SequentialSearchST<Key, Value> {
      * Initializes an empty symbol table.
      */
     public SequentialSearchST() {
+    	//since empty and ints start as 0, nothing to add
     }
 
     /**
@@ -139,6 +140,7 @@ public class SequentialSearchST<Key, Value> {
     public void put(Key key, Value val) {
         if (key == null) throw new IllegalArgumentException("first argument to put() is null"); 
         if (val == null) {
+        	//deletes key if val is null due to mapping key to null means unmapping
             delete(key);
             return;
         }
@@ -161,7 +163,7 @@ public class SequentialSearchST<Key, Value> {
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
     public void delete(Key key) {
-        if (key == null) throw new IllegalArgumentException("argument to delete() is null"); 
+        if (key == null) throw new IllegalArgumentException("argument to delete() is null");
         first = delete(first, key);
     }
 

@@ -2,7 +2,7 @@ package graphs;
 /******************************************************************************
  *  Compilation:  javac Graph.java        
  *  Execution:    java Graph input.txt
- *  Dependencies: Bag.java Stack.java In.java StdOut.java
+ *  Dependencies: Bag.java Queue.java In.java StdOut.java
  *  Data files:   https://algs4.cs.princeton.edu/41graph/tinyG.txt
  *                https://algs4.cs.princeton.edu/41graph/mediumG.txt
  *                https://algs4.cs.princeton.edu/41graph/largeG.txt
@@ -85,15 +85,15 @@ public class Graph {
 
 	/**
 	 * input : int start - startpoint of search int end - endpoint of search output:
-	 * Stack with path, start at top, end at bottom, empty if no such path
+	 * Queue with path, start at top, end at bottom, empty if no such path
 	 */
-	public Stack<Integer> dfs(int start, int end) {
+	public Queue<Integer> dfs(int start, int end) {
 		int[] prev = new int[V];
 		for (int i = 0; i < prev.length; i++) {
 			prev[i] = -1;
 		}
 		boolean[] visited = new boolean[V];
-		Stack<Integer> st = new Stack();
+		Queue<Integer> st = new Queue();
 		if (dfs(start, end, visited, prev)) {
 			int tmp = end;
 			do {
@@ -121,9 +121,9 @@ public class Graph {
 		return false;
 	}
 
-	public Stack<Integer> bfs(int start, int end) {
+	public Queue<Integer> bfs(int start, int end) {
 		Queue<Integer> q = new Queue<Integer>();
-		Stack<Integer> st = new Stack<Integer>();
+		Queue<Integer> st = new Queue<Integer>();
 		boolean[] visited = new boolean[V];
 		int[] prev = new int[V];
 		for (int i = 0; i < prev.length; i++) {
@@ -207,7 +207,7 @@ public class Graph {
 		this.E = G.E();
 		for (int v = 0; v < G.V(); v++) {
 			// reverse so that adjacency list is in same order as original
-			Stack<Integer> reverse = new Stack<Integer>();
+			Queue<Integer> reverse = new Queue<Integer>();
 			for (int w : G.adj[v]) {
 				reverse.push(w);
 			}

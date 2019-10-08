@@ -1,7 +1,13 @@
 package graphs;
 
 import java.util.NoSuchElementException;
-
+/**
+ * heavily modified version of Graph from the book. Comments for already implemented 
+ * functions are pretty much the same, but the functions might have been modified to implement weights
+ *  
+ * @author mrjoh
+ *
+ */
 public class WeightedGraph {
 	private static final String NEWLINE = System.getProperty("line.separator");
 
@@ -29,15 +35,18 @@ public class WeightedGraph {
 
 	/**
 	 * input : int start - startpoint of search int end - endpoint of search output:
-	 * Stack with path, start at top, end at bottom, empty if no such path
+	 * Queue with path, start at top, end at bottom, empty if no such path
 	 */
-	public Stack<Integer> dfs(int start, int end) {
+	public Queue<Integer> dfs(int start, int end) {
 		int[] prev = new int[V];
+		// sets every nodes' start value to -1
 		for (int i = 0; i < prev.length; i++) {
 			prev[i] = -1;
 		}
 		boolean[] visited = new boolean[V];
-		Stack<Integer> st = new Stack<Integer>();
+		// return Queue
+		Queue<Integer> st = new Queue<Integer>();
+		// if there is a path, put it on the return Queue
 		if (dfs(start, end, visited, prev)) {
 			int tmp = end;
 			do {
@@ -48,11 +57,24 @@ public class WeightedGraph {
 		return st;
 	}
 
+	/**
+	 * finds path from node v to node end through dfs
+	 * 
+	 * @param v       - start node
+	 * @param end     - end node
+	 * @param visited - boolean array for visited nodes
+	 * @param prev    - int array for prev node
+	 * @return true if path exists, else false
+	 */
 	private boolean dfs(int v, int end, boolean[] visited, int[] prev) {
+		// sets v as visited
 		visited[v] = true;
+		// if v is end node, return true
 		if (v == end) {
 			return true;
-		} else {
+		}
+		// recursively call nodes connected to v with dfs-
+		else {
 			for (Edge e : adj[v]) {
 				int i = e.vertix;
 				if (!visited[i]) {
@@ -66,20 +88,32 @@ public class WeightedGraph {
 		return false;
 	}
 
-	public Stack<Integer> bfs(int start, int end) {
+	/**
+	 * finds shortest path from node v to node end through dfs
+	 * 
+	 * @param start - start node
+	 * @param end   - end node
+	 * @return Queue with path from start to finish
+	 */
+	public Queue<Integer> bfs(int start, int end) {
+		// queue used for order of bfs
 		Queue<Integer> q = new Queue<Integer>();
-		Stack<Integer> st = new Stack<Integer>();
+		// Queue used in return
+		Queue<Integer> st = new Queue<Integer>();
 		boolean[] visited = new boolean[V];
 		int[] prev = new int[V];
+		// sets every nodes' start value to -1
 		for (int i = 0; i < prev.length; i++) {
 			prev[i] = -1;
 		}
+		// adds startvalue to queue
 		visited[start] = true;
 		q.enqueue(start);
 		while (!q.isEmpty()) {
-
+			// dfs algorithm loop
 			Integer v = q.dequeue();
 			if (v == end) {
+				//ending loop if end node found
 				do {
 					st.push(v);
 					v = prev[v];
@@ -98,18 +132,30 @@ public class WeightedGraph {
 		}
 		return st;
 	}
-
-	public Stack<String> dijkstra(int start, int end) {
+	/**
+	 * calculates shortest weighted path from start node to end if path exists
+	 * @param start
+	 * @param end
+	 * @return Queue containing path from start to end and total weight
+	 */
+	public Queue<String> dijkstra(int start, int end) {
+		//array loging distance to start
 		double[] dist = new double[V];
+		//array logging previous node
 		int[] prev = new int[V];
+		//queue for nodes in graph
 		Queue<Integer> q = new Queue<Integer>();
 		for (int i = 0; i < V; i++) {
+			//adds all nodes, sets distance to max value and previous node to -1 as null node
 			q.enqueue(i);
 			dist[i] = Double.MAX_VALUE;
 			prev[i] = -1;
 		}
+		//sets distance for root node to 0
 		dist[start] = 0;
+		//dijkstra alghorithm
 		while (!q.isEmpty()) {
+			//finds node in q with smallest distance
 			Integer v = q.peek();
 			for (Integer i : q) {
 				if (dist[i] < dist[v]) {
@@ -117,6 +163,7 @@ public class WeightedGraph {
 				}
 			}
 			q.remove(v);
+			//sets new distance for all adjacent nodes to node v
 			for (Edge e : adj[v]) {
 				double weight = e.weight + dist[v];
 				if (dist[e.vertix] > weight) {
@@ -125,124 +172,209 @@ public class WeightedGraph {
 				}
 			}
 		}
-		Stack<String> str = new Stack<String>();
+		Queue<String> str = new Queue<String>();
 		Integer v = end;
+		//prepares Queue with path and total weight
 		do {
 			str.push(v + "");
 			v = prev[v];
 		} while (v != -1);
 		str.push(dist[end] + "");
 		return str;
-		/*
-		 * 1 function Dijkstra(Graph, source): 2 3 create vertex set Q 4 5 for each
-		 * vertex v in Graph: 6 dist[v] <- INFINITY 7 prev[v] <- UNDEFINED 8 add v to Q
-		 * 10 dist[source] <- 0 11 12 while Q is not empty: 13 u <- vertex in Q with min
-		 * dist[u] 14 15 remove u from Q 16 17 for each neighbor v of u: // only v that
-		 * are still in Q 18 alt <- dist[u] + length(u, v) 19 if alt < dist[v]: 20
-		 * dist[v] <- alt 21 prev[v] <- u 22 23 return dist[], prev[]
-		 */
 	}
-	public void getComponent(Integer node, Queue<Integer> added){
+	/**
+	 * finds component from Node node, and adds all nodes in component to added
+	 * @param node - node from which we look for component
+	 * @param added - queue with added nodes
+	 */
+	public void getComponent(Integer node, Queue<Integer> added) {
 		added.enqueue(node);
-		for(Edge e: adj[node]) {
+		for (Edge e : adj[node]) {
 			Integer i = e.vertix;
-			if(!added.contains(i)) {
+			if (!added.contains(i)) {
 				getComponent(i, added);
 			}
 		}
 	}
+	/**
+	 * checks if there is a path from <Node corresponding to start> to <Node corresponding to goal>
+	 * @param start - Integer corresponding to start node
+	 * @param goal - Integer corresponding to end node
+	 * @return <true> if a path exists from path to goal, else <false>
+	 */
 	public boolean checkPath(Integer start, Integer goal) {
 		Queue<Integer> queue = new Queue<Integer>();
 		getComponent(start, queue);
 		return queue.contains(goal);
 	}
-	public Queue<Stack<Integer>> checkCyclePaths(){
-		Queue<Stack<Integer>> queue = new Queue<Stack<Integer>>();
-		for(int i = 0; i < V; i++) {
-			for(Edge e: adj[i]) {
-				if(checkPath(e.vertix, i)) {
-					Stack<Integer> tmp = dfs(e.vertix, i);
-					tmp.push(i);
-					queue.add(tmp);
+	/**
+	 * 
+	 * @return
+	 */
+	public Queue<Queue<Integer>> checkCyclePaths() {
+		Queue<Queue<Integer>> queue = new Queue<Queue<Integer>>();
+		for (int i = 0; i < V; i++) {
+			for (Edge e : adj[i]) {
+				if (checkPath(e.vertix, i)) {
+					Queue<Integer> tmp = dfs(e.vertix, i);
+					if(!tmp.sameOrder(queue)) {
+						tmp.add(i);
+						queue.add(tmp);						
+					}
 				}
 			}
 		}
 		return queue;
 	}
+
 	public Queue<Integer> biggestComponent() {
 		Queue<Integer> q = new Queue<Integer>();
 		for (int i = 0; i < V; i++) {
 			q.enqueue(i);
 		}
 		Queue<Queue<Integer>> queues = new Queue<Queue<Integer>>();
-		while(!q.isEmpty()) {
+		while (!q.isEmpty()) {
 			Queue<Integer> tmp = new Queue<Integer>();
 			getComponent(q.peek(), tmp);
-			for(Integer i: tmp) {
+			for (Integer i : tmp) {
 				q.remove(i);
 			}
 			queues.enqueue(tmp);
 		}
 		Queue<Integer> biggest = queues.peek();
-		for(Queue<Integer> tmp: queues) {
-			if(tmp.size() > biggest.size()) {
+		for (Queue<Integer> tmp : queues) {
+			if (tmp.size() > biggest.size()) {
 				biggest = tmp;
 			}
 		}
 		return biggest;
 	}
-	
+	/**
+	 * creates the minimal graph from the biggest component in the graph.
+	 * @return Queue<String> with the edges in the minimal graph of the biggest component
+	 */
 	public Queue<String> minGraph() {
-		WeightedGraph graph = new WeightedGraph(V);
+		//create a copy of our current graph
+		WeightedGraph graph = new WeightedGraph(this);
+		//reduces the graph with its smallest component
+		for (int i = 0; i < V; i++) {
+			// add all edges to a queue of edges
+			for (Edge e : graph.adj[i]) {
+				System.out.println(e.root +" " + e.vertix + " " + e.weight);
+			}
+		}
+		
 		graph.reduce(biggestComponent());
 		Queue<Edge> edges = new Queue<Edge>();
-		for(int i = 0; i < V; i++) {
-			for(Edge e: adj[i]) {
+		for (int i = 0; i < V; i++) {
+			// add all edges to a queue of edges
+			for (Edge e : graph.adj[i]) {
 				edges.add(e);
 			}
 		}
-		for(int i = 0; i < adj.length; i++) {
+		for (int i = 0; i < adj.length; i++) {
+			// resets
 			graph.adj[i] = new Queue<Edge>();
 		}
-		while(!edges.isEmpty()) {
+		while (!edges.isEmpty()) {
 			Edge e = getSmallestEdge(edges);
 			edges.remove(e);
 			Queue<Integer> tmp = new Queue<Integer>();
 			graph.getComponent(e.root, tmp);
-			if(!tmp.contains(e.vertix)) {
+			if (!tmp.contains(e.vertix)) {
 				graph.addEdge(e.root, e.vertix, e.weight);
 			}
 		}
-		for(int i = 0; i < graph.V(); i++) {
-			for(Edge e: graph.adj[i]) {
+		for (int i = 0; i < graph.V(); i++) {
+			for (Edge e : graph.adj[i]) {
 				edges.add(e);
 			}
 		}
-		
+
 		Queue<String> rep = new Queue<String>();
-		for(Edge e : edges) {
-			rep.add(e.root+ " " + e.vertix +" " +e.weight);
+		for (Edge e : edges) {
+			rep.add(e.root + " " + e.vertix + " " + e.weight);
 		}
 		return rep;
 	}
+	/**
+	 * loops through a queue of edges and returns the smallest edge
+	 * @param q - queue with edges
+	 * @return Edge with smallest weight, i.e. the smallest edge
+	 */
 	private Edge getSmallestEdge(Queue<Edge> q) {
 		Edge e = q.peek();
-		for(Edge edge:q) {
-			if(edge.weight<e.weight) {
+		for (Edge edge : q) {
+			if (edge.weight < e.weight) {
 				e = edge;
 			}
 		}
 		return e;
-		
+
+	}
+	public Queue<Integer> topologic(){
+		Queue<Integer> permaBan = new Queue<Integer>();
+		Queue<Integer> tempBan = new Queue<Integer>();
+		Queue<Integer> nodes = new Queue<Integer>();
+		for(Integer i = 0; i < V; i++) {
+			nodes.add(i);
+		}
+		while(!nodes.isEmpty()) {
+			visit(nodes.peek(), nodes, tempBan, permaBan);
+		}
+		return permaBan;
+	}
+	private void visit(Integer pop, Queue<Integer> nodes, Queue<Integer> tempBan, Queue<Integer> permaBan) {
+		// TODO Auto-generated method stub
+		if(nodes.contains(pop)) {
+			nodes.remove(pop);
+		}
+		if(permaBan.contains(pop)) {
+			return;
+		}
+		if(tempBan.contains(pop)) {
+			System.out.println("Graph has cycle, break");
+			 while(!nodes.isEmpty()) {
+				 nodes.pop();
+			 }
+			 while(!permaBan.isEmpty()) {
+				 permaBan.pop();
+			 }
+			 return;
+		}
+		tempBan.add(pop);
+		for(Edge e: adj[pop]) {
+			visit(e.vertix,nodes,tempBan,permaBan);
+		}
+		tempBan.remove(pop);
+		permaBan.add(pop);
 	}
 
+	/**
+	 L <- Empty list that will contain the sorted nodes
+	while exists nodes without a permanent mark do
+    select an unmarked node n
+    visit(n)
+	function visit(node n)
+    if n has a permanent mark then return
+    if n has a temporary mark then stop   (not a DAG)
+    mark n with a temporary mark
+    for each node m with an edge from n to m do
+        visit(m)
+    remove temporary mark from n
+    mark n with a permanent mark
+    add n to head of L
+    */
+	/**
+	 * removes all edges from nodes not belonging to biggestComponent
+	 * @param biggestComponent - Queue with integers belonging to a separate component
+	 */
 	private void reduce(Queue<Integer> biggestComponent) {
-		for(int i = 0; i < V; i++) {
-			if(!biggestComponent.contains(i)) {
+		for (int i = 0; i < V; i++) {
+			if (!biggestComponent.contains(i)) {
 				adj[i] = new Queue<Edge>();
 			}
 		}
-		
 	}
 
 	/**
@@ -292,12 +424,12 @@ public class WeightedGraph {
 		this.E = G.E();
 		for (int v = 0; v < G.V(); v++) {
 			// reverse so that adjacency list is in same order as original
-			Stack<Integer> reverse = new Stack<Integer>();
+			Queue<Edge> reverse = new Queue<Edge>();
 			for (Edge e : G.adj[v]) {
-				reverse.push(e.vertix);
+				reverse.push(e);
 			}
-			for (int w : reverse) {
-				adj[v].add(new Edge(v, w));
+			for (Edge e : reverse) {
+				adj[v].add(new Edge(v, e.vertix, e.weight));
 			}
 		}
 	}
@@ -361,15 +493,18 @@ public class WeightedGraph {
 		validateVertex(v);
 		return adj[v];
 	}
+
 	public void addSingleEdge(int root, int target, double weight) {
 		validateVertex(root);
 		validateVertex(target);
 		E++;
 		adj[root].add(new Edge(root, target, weight));
 	}
+
 	public void addSingleEdge(int root, int target) {
-		addSingleEdge(root, target,1);
+		addSingleEdge(root, target, 1);
 	}
+
 	/**
 	 * Returns the degree of vertex {@code v}.
 	 *
@@ -411,34 +546,50 @@ public class WeightedGraph {
 		WeightedGraph G = new WeightedGraph(in);
 		StdOut.println(G);
 	}
-
+	/**
+	 * privately made edge class with all things neede for this assignment
+	 * @author mrjoh
+	 *
+	 */
 	public class Edge {
 		double weight;
 		Integer vertix;
 		Integer root;
+		/**
+		 * Creates Edge with standard weight 1
+		 * @param root
+		 * @param vertix
+		 */
 		public Edge(Integer root, Integer vertix) {
 			this.vertix = vertix;
 			weight = 1;
 			this.root = root;
 		}
-
+		/**
+		 * Standard constructor
+		 * @param root
+		 * @param vertix
+		 * @param weight
+		 */
 		public Edge(Integer root, Integer vertix, double weight) {
 			this.vertix = vertix;
 			this.weight = weight;
 			this.root = root;
 		}
+
 		@Override
 		public boolean equals(Object o) {
-			if(o instanceof Edge) {
+			if (o instanceof Edge) {
 				return equals((Edge) o);
 			}
 			return false;
 		}
+
 		public boolean equals(Edge e) {
-			if(vertix == e.vertix && root == e.root && weight == e.weight) {
+			if (vertix == e.vertix && root == e.root && weight == e.weight) {
 				return true;
 			}
-			if(root == e.vertix && vertix == e.root && weight == e.weight) {
+			if (root == e.vertix && vertix == e.root && weight == e.weight) {
 				return true;
 			}
 			return false;

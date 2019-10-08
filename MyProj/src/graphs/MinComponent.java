@@ -2,6 +2,7 @@ package graphs;
 
 public class MinComponent {
 	public static void main(String[] args) {
+		// creates a mapping from a state name to a number and vice versa
 		SequentialSearchST<String, Integer> stringToInt = new SequentialSearchST<String, Integer>();
 		SequentialSearchST<Integer, String> intToString = new SequentialSearchST<Integer, String>();
 		String[] edges = StdIn.readAllLines();
@@ -16,6 +17,7 @@ public class MinComponent {
 				}
 			}
 		}
+		// creates graph and adds edges
 		WeightedGraph g = new WeightedGraph(nr);
 		for (int i = 0; i < edges.length; i++) {
 			String s1 = edges[i].split("\\s+")[0];
@@ -24,16 +26,16 @@ public class MinComponent {
 		}
 		Queue<String> st = g.minGraph();
 		String out = "all edges: \n";
-		while(!st.isEmpty()) {
+		while (!st.isEmpty()) {
 			String tmp = st.dequeue();
-			out+= intToString.get(Integer.parseInt(tmp.split("\\s+")[0]));
-			out+= "<->";
-			out+= intToString.get(Integer.parseInt(tmp.split("\\s+")[1]));
+			out += intToString.get(Integer.parseInt(tmp.split("\\s+")[0]));
+			out += "<->";
+			out += intToString.get(Integer.parseInt(tmp.split("\\s+")[1]));
 			out += "    weight:";
-			out+= tmp.split("\\s+")[2];
-			out+= "\n";
+			out += tmp.split("\\s+")[2];
+			out += "\n";
 		}
-		
+		// prints result
 		System.out.println(out);
 	}
 }

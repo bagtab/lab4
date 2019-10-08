@@ -1,10 +1,13 @@
 package graphs;
-public class GraphBuilder {
+public class DFS2 {
 	public static void main(String[] args) {
+		//creates a mapping from a state name to a number and vice versa
 		SequentialSearchST<String, Integer> stringToInt = new SequentialSearchST<String, Integer>();
 		SequentialSearchST<Integer, String> intToString = new SequentialSearchST<Integer, String>();
+		//loading input into string array
 		String[] edges = StdIn.readAllLines();
 		int nr = 0;
+		//maps value to string and string to value
 		for (int i = 0; i < edges.length; i++) {
 			for (int j = 0; j < 2; j++) {
 				String str = edges[i].split("\\s+")[j];
@@ -15,13 +18,15 @@ public class GraphBuilder {
 				}
 			}
 		}
-		Graph g = new Graph(nr);
+		//creates graph and adds edges
+		WeightedGraph g = new WeightedGraph(nr);
 		for (int i = 0; i < edges.length; i++) {
 			String s1 = edges[i].split("\\s+")[0];
 			String s2 = edges[i].split("\\s+")[1];
 			g.addEdge(stringToInt.get(s1), stringToInt.get(s2));
 		}
-		Stack<Integer> st = g.dfs(stringToInt.get(args[0]),stringToInt.get(args[1]));
+		// does a dfs search of path
+		Queue<Integer> st = g.dfs(stringToInt.get(args[0]),stringToInt.get(args[1]));
 		String out = "";
 		if(!st.isEmpty()) {
 			out += intToString.get(st.pop());
@@ -29,6 +34,7 @@ public class GraphBuilder {
 		while(!st.isEmpty()) {
 			out += "->" + intToString.get(st.pop());
 		}
+		//prints string of path
 		System.out.println(out);
 	}
 }

@@ -77,6 +77,11 @@ public class Queue<Item> implements Iterable<Item> {
     public boolean isEmpty() {
         return first == null;
     }
+    /**
+     * returns true if queue contains Item item
+     * @param item - search item looked for in queue
+     * @return {@code true} if the queue contains Item item; {@code false} otherwise
+     */
     public boolean contains(Item item) {
     	Node<Item> n = first;
     	while(n != null) {
@@ -122,6 +127,18 @@ public class Queue<Item> implements Iterable<Item> {
         }else {
         	last.prev = oldlast;
         	oldlast.next = last;
+        }
+        n++;
+    }
+    public void addAtStart(Item item) {
+        Node<Item> oldFirst = first;   
+    	first = new Node<Item>();
+        first.item = item;
+        if (isEmpty()) {
+        	last = first;
+        }else {
+        	first.next = oldFirst;
+        	oldFirst.prev = first;
         }
         n++;
     }
@@ -184,7 +201,13 @@ public class Queue<Item> implements Iterable<Item> {
         }
     }
 
-
+    public Item getI(int i) {
+    	Node<Item> n = first;
+    	for(int j = 0; j < i; j++) {
+    		n = n.next;
+    	}
+    	return n.item;
+    }
     /**
      * Unit tests the {@code Queue} data type.
      *
@@ -201,17 +224,28 @@ public class Queue<Item> implements Iterable<Item> {
         }
         StdOut.println("(" + queue.size() + " left on queue)");
     }
-
+    /**
+     * returns and removes the top item of the queue in fifo order
+     * @return Item item that was popped
+     */
 	public Item pop() {
 		// TODO Auto-generated method stub
 		if (isEmpty()) throw new NoSuchElementException("Queue underflow");
         Item item = last.item;
         last = last.prev;
-        last.next = null;
+        if(last!=null) {
+        	last.next = null;
+        }
         n--;
-        if (isEmpty()) first = null;   // to avoid loitering
+        if (last == null) {
+        	first = null;   // to avoid loitering
+        }
         return item;
     }
+	/**
+	 * removes Item i if it is found in queue
+	 * @param i - item to be removed from queue
+	 */
 	public void remove(Item i) {
 		if(isEmpty()) {
 			return;
@@ -237,9 +271,50 @@ public class Queue<Item> implements Iterable<Item> {
 			}
 		}
 	}
-
+	/**
+	 * adds Item edge to queue, wrapper method for enqueue
+	 * @param edge - Item to be added
+	 */
 	public void add(Item edge) {
 		enqueue(edge);
+	}
+
+	public void push(Item e) {
+		// TODO Auto-generated method stub
+		enqueue(e);
+		
+	}
+
+	public boolean sameOrder(Queue<Queue<Item>> queue) {
+		for(Queue<Item> q:queue) {
+			if(sameOrderOfQueue(q)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean sameOrderOfQueue(Queue<Item> q) {
+		// TODO Auto-generated method stub
+		if(q.size()-1 != size()) {
+			return false;
+		}
+		boolean retVal = false;
+		Item itemQ = q.pop();
+		for(int i = 0; i < q.size(); i++) {
+			boolean tmp = true;
+			for(int j = 0; j < q.size(); j++) {
+				if(!q.getI(j).equals(getI(j))) {
+					tmp = false;
+				}
+			}
+			if(tmp == true) {
+				retVal = true;
+			}
+			q.enqueue(q.dequeue());
+		}
+		q.enqueue(itemQ);
+		return retVal;
 	}
 }
 
