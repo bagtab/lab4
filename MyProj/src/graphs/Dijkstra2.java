@@ -22,7 +22,7 @@ public class Dijkstra2 {
 		for (int i = 0; i < edges.length; i++) {
 			String s1 = edges[i].split("\\s+")[0];
 			String s2 = edges[i].split("\\s+")[1];
-			g.addEdge(stringToInt.get(s1), stringToInt.get(s2));
+			g.addEdge(stringToInt.get(s1), stringToInt.get(s2), i+1);
 		}
 		//starts dijkstra search for shortest path
 		Queue<String> st = g.dijkstra(stringToInt.get(args[0]), stringToInt.get(args[1]));

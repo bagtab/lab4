@@ -24,7 +24,9 @@ public class CyclePaths {
 			String s2 = edges[i].split("\\s+")[1];
 			g.addSingleEdge(stringToInt.get(s1), stringToInt.get(s2));
 		}
+		//adds edge that creates a cyclePath
 		g.addSingleEdge(30, 0);
+		//
 		Queue<Queue<Integer>> q = g.checkCyclePaths();
 		for (Queue<Integer> s : q) {
 			String str = intToString.get(s.dequeue());

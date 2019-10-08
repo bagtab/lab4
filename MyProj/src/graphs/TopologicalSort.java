@@ -24,9 +24,9 @@ public class TopologicalSort {
 			String s2 = edges[i].split("\\s+")[1];
 			g.addSingleEdge(stringToInt.get(s1), stringToInt.get(s2));
 		}
-		//runs topologic sort
+		// runs topologic sort
 		Queue<Integer> q = g.topologic();
-		while(!q.isEmpty()) {
+		while (!q.isEmpty()) {
 			System.out.print(intToString.get(q.pop()) + " ");
 		}
 	}

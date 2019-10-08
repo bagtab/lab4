@@ -226,7 +226,10 @@ public class WeightedGraph {
 		}
 		return queue;
 	}
-
+	/**
+	 * extracts the biggest component and returns it in a queue.
+	 * @return Queue<Integer> q with all nodes belonging to biggest component
+	 */
 	public Queue<Integer> biggestComponent() {
 		Queue<Integer> q = new Queue<Integer>();
 		for (int i = 0; i < V; i++) {
@@ -257,13 +260,6 @@ public class WeightedGraph {
 		//create a copy of our current graph
 		WeightedGraph graph = new WeightedGraph(this);
 		//reduces the graph with its smallest component
-		for (int i = 0; i < V; i++) {
-			// add all edges to a queue of edges
-			for (Edge e : graph.adj[i]) {
-				System.out.println(e.root +" " + e.vertix + " " + e.weight);
-			}
-		}
-		
 		graph.reduce(biggestComponent());
 		Queue<Edge> edges = new Queue<Edge>();
 		for (int i = 0; i < V; i++) {
